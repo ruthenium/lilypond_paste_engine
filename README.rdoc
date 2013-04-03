@@ -1,0 +1,158 @@
+= Lilypond Paste Engine (LPE)
+
+LPE is a very simple Rails3 application that allows users to share Lilypond
+and MXML data.
+
+Yeah, it is a yet another paste engine.
+
+== Why?
+
+{Lilypond}[http://www.lilypond.org/] is an awesome toolkit which includes
+a TeX-like music notation language and a set of tools. It allows one to
+quickly write down note sheets and generate PDFs or images for them.
+
+There are tons of varios paste sites in the web nowdays, but no of them
+could deal with Lilypond and music nicely.
+
+Is it a problem? Probably yes, if you need to quickly share the music
+notesheet with someone.
+
+== Description
+
+Generally, LPE is not very function-reach. Honestly speaking, it is
+something like a quick and dirty solution with very minimalist look and feel.
+Of course it is unstable, not really production-ready now, and requires
+much more work and lots of improvements to became really brilliant.
+
+At the moment it allows one to paste Lilypond data as a plain text, or
+attach a {MusicXML}[http://en.wikipedia.org/wiki/MXML] file. The input data
+is saved and processed in a separate thread, generating PNGs and PDFs for it.
+Convertation from Music XML to Lilypond is done via +musicxml2ly+ utility
+from the Lilypond distribution.
+
+The successfully processed pastes will be hold for a 30 days after creation
+or for 30 days after last access if the +hold+ checkbox is set. Pastes, that
+are failed to process, will be deleted after 24 hours after their creation to
+prevent users paste non-music data.
+
+All of the insecure Lilypond features are disabled, so keep an eye on them.
+
+The ids of pastes are hidden and a unique random string is used insted.
+
+== Screenshots
+
+=== Paste creation form
+
+{<img src="scrn_index.png?raw=true" />}["scrn_index.png?raw=true"]
+
+=== Paste page
+
+{<img src="scrn_paste.png?raw=true" />}["scrn_paste.png?raw=true"]
+
+== Live demo
+
+Not available at the moment. Sorry.
+
+== Features
+
+1. Background convertation input from mxml to lilypond
+2. Background generation of PDFs and PNGs for input data
+3. Ajax
+4. Administration with ActiveAdmin
+
+== Getting started
+
+LPE is configured, tested and deployed like any other regular rails3 application.
+If you are familiar with Rails, it must not have any difficulties for you.
+
+Note that you have to properly configure devise for active admin, for example
+create a default AdminUser and change the secret_token.
+
+The second important thing is that you will need a local lilypond distribution
+for LPE to work. Obtain it {here}[http://www.lilypond.org/download.html],
+then set a path to it to a config variable +lilypond_path+ like this:
+
+    config.lilypond_path = "path-to-lilypond"
+
+Somewhere in your +config/environments+ directory.
+
+To setup cleaning job, when in project root, type:
+
+  $> clockwork config/clock.rb &
+
+== Technical details
+
+=== Used tools
+
+* {clockwork}[https://github.com/adamwiggins/clockwork]
+* {delayed_job}[https://github.com/collectiveidea/delayed_job]
+* {carrierwave}[https://github.com/jnicklas/carrierwave]
+* {active_admin}[https://github.com/gregbell/active_admin]
+* {inherited_resources}[https://github.com/josevalim/inherited_resources]
+* {slim}[https://github.com/slim-template/slim]
+
+Testing is done via {Rspec}[https://github.com/rspec/rspec] and {FactoryGirl}[https://github.com/thoughtbot/factory_girl]. Files in the +spec/fixtures+
+are used for testing lilypond wrappers. They were found somewhere in the web
+as an examples of +.mxml+ files.
+
+=== Lilypond wrapper
+
+Module LilyHelpers is a thin wrapper over utilities at the original
+Lilypond distribution. It invokes them as subprocesses and uses
++open3+ for dealing with standard input and output.
+It responds to two methods: +mxml_to_lilypond+ and +process_lilypond+.
+
+[+mxml_to_lilypond+]
+  accepts a single argument +mxml+, a file-like object
+  
+  returns a converted Lilypond as a +String+ if convertation was successful
+  
+  returns +nil+ if convertation failed
+
+[+process_lilypond+]
+  accepts three arguments:
+  ly :: a file-like object
+  basename :: a basename for converted files
+  dir :: a directory for converted files
+  
+  returns a +Hash+ where keys are file extensions as symbols and values are
+  arrays of file paths if processing was successful
+  
+  returns nil if convertation failed
+
+=== Notes on project structure
+
+[+app/jobs+] Delayed jobs for background processing
+
+[+lib/lily_helpers.rb+] Lilypond wrapper
+
+[+config/clock.rb+] Clockwork
+
+Anything remaining goes to +config/initializers+.
+
+== To-do
+
+1. Design (Including images and icons)
+2. Social share links
+3. Improvements to administration ui (specially for the delayed job part)
+4. More complex devise and cancan configuration
+5. Probaly, routing
+6. Perhaps migration to resque if delayed_job
+   becomes too heavy and less-scalable
+7. LilyHelpers perhaps must be released
+   as a standalone gem
+8. Is it possible to use carrierwave processing
+   and file versions for +lilypond+ and +mxml+
+   instead of a number of carrierwave separate
+   uploaders?
+9. Detail Rdoc documentation
+
+== License
+
+Copyright (c) 2013 ruthenium
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
