@@ -34,7 +34,7 @@
         when 0
           text.show()
           file.show()
-          form_toggle.hide
+          form_toggle.hide()
 
     formToggle if $("#main .errorlist").length
         text_disp = text.next("ul.errorlist").length ? 1 : 0
