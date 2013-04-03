@@ -9,10 +9,6 @@ class Paste < ActiveRecord::Base
   mount_uploader :pdf, PdfUploader
 
   before_create :set_defaults
-  # after_create :start_processing
-  #after_destroy :remove_uploads_dir
-
-  #validates_integrity_of :mxml
 
   validates_each :mxml, :lilypond_text, :on => :create, :allow_nil => true, :allow_blank => true do
     |record, attr_name, value|
@@ -79,7 +75,7 @@ class Paste < ActiveRecord::Base
     self.expires_at = 30.days.since Time.now
 
     begin
-      self.visible_id = SecureRandom.hex(3)
+      self.visible_id = String.random(6) # custom method
     end while self.class.exists?(:visible_id => visible_id)
   end
 

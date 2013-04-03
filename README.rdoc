@@ -35,8 +35,6 @@ or for 30 days after last access if the +hold+ checkbox is set. Pastes, that
 are failed to process, will be deleted after 24 hours after their creation to
 prevent users paste non-music data.
 
-All of the insecure Lilypond features are disabled, so keep an eye on them.
-
 The ids of pastes are hidden and a unique random string is used insted.
 
 == Screenshots
@@ -60,23 +58,30 @@ Not available at the moment. Sorry.
 3. Ajax
 4. Administration with ActiveAdmin
 
+== Limitations
+
+All the insecure Lilypond features are disabled, so keep an eye on them.
+
+A maximum size of a Music XML file or a Lilypond string to upload is limited
+to 2 megabytes (Yeah, a unicode string is limited to its byte size, not
+character number!).
+
 == Getting started
 
 LPE is configured, tested and deployed like any other regular rails3 application.
 If you are familiar with Rails, it must not have any difficulties for you.
 
-Note that you have to properly configure devise for active admin, for example
-create a default AdminUser and change the secret_token.
+Note, that you have to properly configure devise for active admin, for example
+create a default AdminUser.
 
 The second important thing is that you will need a local lilypond distribution
 for LPE to work. Obtain it {here}[http://www.lilypond.org/download.html],
-then set a path to it to a config variable +lilypond_path+ like this:
+then set a path to it to a config variable +lilypond_path+ somewhere in your
++config/environments+ directory like this:
 
     config.lilypond_path = "path-to-lilypond"
 
-Somewhere in your +config/environments+ directory.
-
-To setup cleaning job, when in project root, type:
+To setup cleaning job type (when in project root):
 
   $> clockwork config/clock.rb &
 
@@ -118,7 +123,7 @@ It responds to two methods: +mxml_to_lilypond+ and +process_lilypond+.
   returns a +Hash+ where keys are file extensions as symbols and values are
   arrays of file paths if processing was successful
   
-  returns nil if convertation failed
+  returns nil if processing failed
 
 === Notes on project structure
 
@@ -134,9 +139,9 @@ Anything remaining goes to +config/initializers+.
 
 1. Design (Including images and icons)
 2. Social share links
-3. Improvements to administration ui (specially for the delayed job part)
-4. More complex devise and cancan configuration
-5. Probaly, routing
+3. Some static pages, contact form
+4. Improvements to administration ui (specially for the delayed job part)
+5. More complex devise and cancan configuration
 6. Perhaps migration to resque if delayed_job
    becomes too heavy and less-scalable
 7. LilyHelpers perhaps must be released
@@ -145,7 +150,6 @@ Anything remaining goes to +config/initializers+.
    and file versions for +lilypond+ and +mxml+
    instead of a number of carrierwave separate
    uploaders?
-9. Detail Rdoc documentation
 
 == License
 

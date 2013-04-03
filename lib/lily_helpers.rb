@@ -42,11 +42,9 @@ module LilyHelpers
         cmd: [LILYPOND, '-dsafe', '--png', '--pdf', "-o#{basename}", '-', :chdir => dir]
       }
       super args do
-        result = {}
+        result = Hash.new { |h, k| h[k] = [] }
         Dir.glob("#{dir}/*.{png,pdf}").sort!.each do |item|
-          ext = File.extname(item)[1..-1].to_sym
-          result[ext] = [] unless result[ext]
-          result[ext] << item
+          result[File.extname(item)[1..-1].to_sym] << item
         end
         result
       end # super args
