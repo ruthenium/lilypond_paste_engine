@@ -1,0 +1,24 @@
+doctype 5
+html lang="en"
+  head
+    meta charset="utf-8"
+    title = content_for?(:page_title) ? (yield :page_title) : 'Paste your music here!'
+    / stylesheets:
+    = stylesheet_link_tag "application",       :media => "all"
+    = stylesheet_link_tag params[:controller], :media => "all"
+    = yield :css if content_for? :css
+    / scripts:
+    = javascript_include_tag "application"
+    = javascript_include_tag params[:controller]
+    = yield :js if content_for? :js
+    / csrf:
+    = csrf_meta_tags
+
+  body
+    - if content_for? :body
+      = yield :body
+    - else
+      header#header
+        h1 = link_to "Paste your music here!", root_path
+      #main
+        = yield :main

@@ -7,12 +7,12 @@
 
 - content_for :main do
   #paste-info
-    // link to this page:
+    / link to this page:
     = link_to "Paste # #{@paste.visible_id}", paste_path(@paste)
     span#createdat Created at #{@paste.created_at}
 
     #paste-links
-      // links to download paste content
+      / links to download paste content
       ul
         - if @paste.mxml?
           li
@@ -27,16 +27,16 @@
   #paste-body
     - if @paste.processed?
       - if @paste.proc_success?
-        // paste is processed and processing succeeded:
+        / paste is processed and processing succeeded:
         - @paste.images.each do |i|
-          img.paste-preview[src=i.png.url]
+          img.paste-preview src=i.png.url
       - else
-        // paste is processed, but processing failed:
+        / paste is processed, but processing failed:
         | Our smart machine can't process this paste. Perhaps it is invalid.
         | This may be caused by some unsafe lilypond features, that are disabled here due to security reasons.
         | If you are completely sure that this is a valid data, please inform us.
     - else
-      // paste is still being processed...
+      / paste is still being processed...
       | This paste is being processed. Please wait a little. 
 
 

@@ -6,13 +6,14 @@
   h3 New paste
   = form_for @paste, :html => {:multipart => true} do |f|
     
+    / perhaps we must use a helper for this.
     - if @paste.errors.get(:base).try :any?
       ul.errorlist
         - @paste.errors.get(:base).each do |m|
           li = m
 
     p
-      label[for="paste_mxml"] ="MusicXML file:"
+      label for="paste_mxml" MusicXML file:
       = f.file_field :mxml
       - if @paste.errors.get(:mxml).try :any?
         ul.errorlist
@@ -20,7 +21,7 @@
             li = m
 
     p
-      label[for="paste_lilypond_text"] ="Lilypond text:"
+      label for="paste_lilypond_text" Lilypond text:
       = f.text_area :lilypond_text, :rows => 15, :cols => 50
       - if @paste.errors.get(:lilypond_text).try :any?
         ul.errorlist
@@ -28,7 +29,7 @@
             li = m
 
     p
-      label[for="paste_hold"] Hold:
+      label for="paste_hold" Hold:
       = f.check_box :hold
       - if @paste.errors.get(:hold).try :any?
         ul.errorlist
